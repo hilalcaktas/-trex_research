@@ -175,15 +175,16 @@ RESTful, iki bilgisayar sisteminin internet üzerinden güvenli bir şekilde bil
 
 ### JSON veri formatı ve kullanım amacı
 Sunucu ile web uygulaması arasında veri taşır.
-JSON Örneği: Kişi Bilgileri
 
-{
-  "ad": "Ali",
-  "soyad": "Veli",
-  "yas": 30,
-  "sehir": "İstanbul",
-  "hobiler": ["kitap okumak", "spor yapmak", "seyahat etmek"]
-}
+   JSON Örneği: Kişi Bilgileri
+
+    {
+     "ad": "Ali",
+     "soyad": "Veli",
+     "yas": 30,
+     "sehir": "İstanbul",
+     "hobiler": ["kitap okumak", "spor yapmak", "seyahat etmek"]
+    }
 
 {}: Bir JSON nesnesini (object) temsil eder.
 "ad": "Ali": "ad" anahtarına karşılık gelen değer "Ali"dir. Bu, bir key-value (anahtar-değer)
@@ -346,62 +347,68 @@ SaveChanges():Yapılan tüm değişiklikleri veritabanına yazar
 
 **Where — Filtreleme**
 Bir koleksiyon içinden belirli koşula uyan elemanları seçmek için kullanılır.
-LINQ
-var activeUsers = context.Users
-    .Where(u => u.IsActive)
-    .ToList();
 
-SQL
-SELECT * FROM Users
-WHERE IsActive = 1;
+    LINQ
+    var activeUsers = context.Users
+       .Where(u => u.IsActive)
+       .ToList();
+
+    SQL
+    SELECT * FROM Users
+    WHERE IsActive = 1;
 
 **Select — Dönüştürme**
 Koleksiyonun her bir elemanını başka bir forma dönüştürmek için kullanılır.
-LINQ
-var names = context.Users
+
+    LINQ
+    var names = context.Users
     .Select(u => u.Name)
     .ToList();
 
-SQL
-SELECT Name FROM Users;
+    SQL
+    SELECT Name FROM Users;
 
  **OrderBy / OrderByDescending — Sıralama**
 Koleksiyondaki elemanları küçükten büyüğe ya da büyükten küçüğe sıralar.
-LINQ
-var sortedDesc = context.Users
+
+    LINQ
+    var sortedDesc = context.Users
     .OrderByDescending(u => u.Age)
     .ToList();
 
-SQL
-SELECT * FROM Users
-ORDER BY Age DESC;
+    SQL
+    SELECT * FROM Users
+    ORDER BY Age DESC;
 
 **Any — Var mı?**
 Koleksiyonda belirli koşula uyan en az bir eleman olup olmadığını kontrol eder.
-LINQ
-bool exists = context.Users.Any(u => u.City == "İstanbul");
 
-SQL
-SELECT CASE 
+     LINQ
+    bool exists = context.Users.Any(u => u.City == "İstanbul");
+
+    SQL
+    SELECT CASE 
     WHEN EXISTS (
         SELECT 1 FROM Users WHERE City = 'İstanbul'
     )
     THEN 1 ELSE 0
-END;
+      END;
 
 **Count — Eleman Sayısı**
 Koleksiyondaki toplam eleman sayısını veya şartı sağlayanların sayısını döner.
-LINQ
-int count = context.Users.Count();
 
-SQL
-SELECT COUNT(*) FROM Users;
+    LINQ
+    int count = context.Users.Count();
+
+    SQL
+    SELECT COUNT(*) FROM Users;
 
 
 **GroupBy — Gruplama**
  Belirli bir özelliğe göre gruplama yapar.
-LINQ
-var groupByCity = context.Users
+ 
+    LINQ
+    var groupByCity = context.Users
     .GroupBy(u => u.City)
     .Select(g => new {
         City = g.Key,
@@ -409,10 +416,10 @@ var groupByCity = context.Users
     })
     .ToList();
 
-SQL
-SELECT City, COUNT(*) AS Count
-FROM Users
-GROUP BY City;
+    SQL
+    SELECT City, COUNT(*) AS Count
+    FROM Users
+    GROUP BY City;
 
 ### Code-First ve Database-First yaklaşımı nedir?
 **Code-First yaklaşımı**
@@ -433,28 +440,32 @@ GROUP BY City;
 ### Temel SQL sorguları: SELECT, INSERT, UPDATE, DELETE
 **SELECT** : Veri tabanındaki verileri sorgulamak için kullanılır. Bu komut veri tabanındaki belirli bir tablodan belirli bir sütunu seçmek için kullanılır.
 
-SELECT * FROM Users;
-(Users tablosundaki tüm kayıtları getirir.)
+    SELECT * FROM Users;
+    (Users tablosundaki tüm kayıtları getirir.)
 
 WHERE: Komutu ile kayıtları filtrelemek için kullanılır.Yalnızca belirli koşulları sağlayan kayıtları çıkarmak için kullanılır.
-SELECT * FROM Users
-WHERE Age > 18;
+
+    SELECT * FROM Users
+    WHERE Age > 18;
 
 **INSERT INTO** : Veritabanındaki tablolarımıza yeni veriler seçmek için kullanılır
-INSERT INTO Users (Name, Age, City)
-VALUES ('Ali', 30, 'İstanbul');
-(Users tablosuna yeni bir kullanıcı ekler)
+
+    INSERT INTO Users (Name, Age, City)
+    VALUES ('Ali', 30, 'İstanbul');
+    (Users tablosuna yeni bir kullanıcı ekler)
 
 **UPDATE** : Veritabanındaki bir kaydı güncellemek için kullanılır.
-UPDATE Users
-SET City = 'Ankara'
-WHERE Id = 1;
-(WHERE yoksa tüm tablo güncellenir!)
+
+    UPDATE Users
+    SET City = 'Ankara'
+    WHERE Id = 1;
+    (WHERE yoksa tüm tablo güncellenir!)
 
 **DELETE**: Veritabanındaki verileri silmemizi sağlar.
-DELETE FROM Users
-WHERE Id = 1;
-(WHERE yoksa tüm tablo silinir!)
+
+    DELETE FROM Users
+    WHERE Id = 1;
+    (WHERE yoksa tüm tablo silinir!)
 
 ## 6. Güvenlik ve Performans
 ### Authentication vs Authorization nedir?
@@ -497,16 +508,203 @@ standartlarını uygulamanı sağlayan bir kütüphanedir.
 | OpenID         | Kimlik doğrulama (eski)            |
 | OpenIddict     | .NET’te OAuth/OIDC implementasyonu |
 
+### Performans artımı için ne yapılabilir? (AsNoTracking, IAsyncEnumerable, caching, profiling, redis)
+**AsNoTracking()**: EF Core’un Change Tracking (veritabanından çekilen nesneleri hafızada tutar ve neyin INSERT / UPDATE / DELETE edileceğine karar verir.) mekanizmasını kapatır. daha az bellek kullanır ve hızlı sorgu yapar
+
+     var users = context.Users
+                     .AsNoTracking()
+                     .ToList();
 
 
+**IAsyncEnumerable**: Veriyi parça parça (streaming) çeker, hepsini RAM’e yüklemez. düşük bellek kullanır
 
+    await foreach (var user in context.Users.AsAsyncEnumerable())
+    {
+    Console.WriteLine(user.Name);
+    }
 
+**Caching (Önbellekleme)**: Sık okunan ama nadir değişen verileri tekrar DB’den çekmemek 
 
+**Profiling**: Performans sorununu ölçelerek bulur
 
+**Redis**: Bellekte çalışan, anahtar-değer yapısına dayalı bir veri deposudur. Sunucular arası paylaşım yapabilir
 
+### OWASP Top 10
+Web uygulamalarında güvvenlik açıkları listesi
+### Web uygulamalarında en yaygın güvenlik açıklar         
+  1. Injection
+      Güvenilmeyen veriler, bir komut veya sorgunun bir parçası olarak bir yorumlayıcıya gönderildiğinde ortaya çıkar. Saldırganın verileri, yorumlayıcıyı istenmeyen komutları yürütmesi veya uygun yetkilendirme olmadan verilere erişmesi için kandırabilir.
+  2. Broken Authentication
+     Kimlik doğrulama ve oturum yönetimiyle ilgili işlevler, yanlış uygulandığında, saldırganların parolaları, anahtar sözcükleri ve oturumları tehlikeye atmasına olanak tanır.
+  3. Sensitive Data Exposure
+    Çoğu web uygulaması ve API, finans, sağlık hizmetleri ve PII(kişisel olarak tanımlabilir bilgiler) gibi hassas verileri gerektiği gibi koruyamaz. Çalmak isteyenler kredi kartı, kimlik hırsızlığı gibi şeyler çalabilir
+  4. XML External Entities (XXE)
+    Birçok eski veya kötü yapılandırılmış XML işlemci, XML belgelerindeki harici entity referanslarını değerlendirir. Bu kullanarak dahili dosyaları ifşa etmek için kullanılabilir
+  5. Broken Access Control
+    Kimliği doğrulanmış kullanıcıların ne yapmasına izin verildiğine ilişkin kısıtlamalar genellikle düzgün bir şekilde uygulanmaz. Hırsızlar diğer kullanıcı verilerine erişebilir
+  6. Security Misconfiguration
+     Güvenli olmayan varsayılan yapılandırmaların, eksik veya geçici yapılandırmaların, açık bulut depolamanın, yanlış yapılandırılmış HTTP headerının ve hassas bilgiler içeren ayrıntılı hata mesajlarının bir sonucudur.
+  7. Cross-Site Scripting (XSS)
+     Bir uygulama, yeni bir web sayfasında uygun doğrulama veya çıkış olmadan, güvenilir olmayan veriler içerdiğinde ortaya çıkar
+  8. Insecure Deserialization
+     Genellikle uzaktan kod yürütülmesine yol açar
+  9. Using Components with Known Vulnerabilities
+     Kütüphaneler, frameworksler ve diğer yazılım modülleri gibi bileşenler, uygulama ile aynı ayrıcalıklarla çalışır. Savunmasız bir bileşenden yararlanılırsa, bu tür bir saldırı, ciddi veri kaybını veya sunucunun ele geçirilmesini kolaylaştırabilir.
+  10. Insufficient Logging & Monitoring
+       Yetersiz günlük kaydı(insufficient logging) ve izleme(monitoring), olay yanıtı(incident response) ile eksik veya etkisiz entegrasyon ile birleştiğinde, saldırganların sistemlere daha fazla saldırmasına, kalıcılığı sürdürmesine, daha fazla sisteme dönmesine ve verileri kurcalamasına, çıkarmasına veya yok etmesine izin verir.
 
+### SQL Injection, XSS, CSRF, Broken Auth gibi başlıkların kısa
+tanımı
+**SQL Injection**: kullanıcıdan alınan veriler sql sorgularına dehil edilerek yetkisiz erişim sağlanır
+**XSS**: Zararlı JavaScript kodlarının uygulama üzerinden kullanıcı tarayıcısında çalıştırılması
+**CSRF** : Web sitesinin açığından yararlanarak web sitesi kullanıcılarının istekleri dışında sanki o kullanıcıymış gibi erişerek işlem yapılması
+**Broken Authentication**: Kimlik doğrulama ve oturum yönetiminin hatalı uygulanması nedeniyle hesapların ele geçirilmesi.
+      
+ ### ASP.NET Core ile alınabilecek önlemler (örnek: model validation, input sanitization)
+ **Model Validation**: kullanıcıdan gelen veriiler kurallara uygun mu diye bakar
+ **Input Sanitization**: Zararlı karakterleri temizler ve XSS saldılarını önler
+ **Parametreli Sorgular / EF Core**: Parametreli sorgu üretir
+ **Anti-CSRF**: Kullanıcı adı üzerinden sahte istek gönderilmesini önler
+ **Authentication & Authorization**: Kimlik doğrulama ve ne yetkisi olduğu ayırmını yapar
+ **HTTPS Zorunluluğu**: verilerin şifreli olmasını sağlar
+ 
+## 7. Logging ve Hata Yönetim
+ ### Neden loglama yapılır? Log seviyesi nedir?
+ Yazılım geliştiricilerin hataları tespit etmek ve gidermek açısından önemli bir kaynaktır.Loglar bir yazılım sistemi içerisinde işleyişin ayak izleridir 
+Log seviyesi, kaydedilecek logların önem derecesini belirler.
+Her seviye, sistemin farklı bir durumunu temsil eder.
+| Seviye          | Anlamı                             |
+| --------------- | ---------------------------------- |
+| **Trace**       | En detaylı, adım adım bilgi        |
+| **Debug**       | Geliştirme sırasında hata ayıklama |
+| **Information** | Normal sistem akışı                |
+| **Warning**     | Potansiyel problem                 |
+| **Error**       | İşlemi bozan hata                  |
+| **Critical**    | Sistem çalışamaz durumda           |
 
+### ASP.NET Core'da logging altyapısı
+Uygulamanın en yaygın özelliklerinden biri, raporlama yeteneğidir. Bunlar yalnızca bir uygulamadan kaynaklanan sorunları gidermeye yardımcı olmakla kalmaz, aynı zamanda işlerin nasıl gittiğini takip etmeye ve sorunları daha kolay bir şekilde ortaya çıkarmak ve durdurmak için yardımcı olur
+**ILoggerFactory**
+ILoggerFactory, uygun bir ILogger türü örneği oluşturmak ve ayrıca ILoggerProvider örneğini eklemek için gerekli startup.cs sınıfında kullanılacak olan bir interface’dir
 
+**ILoggerProvider**
+Logger sınıfını oluşturmak ve yönetmek görevini üstlenen interface’dir.
 
+**ILogger**
+Loglamayı yapacak, Logger sınıfında kullanılacak olan interface’dir.
 
+### Global exception handling nasıl yapılır?
+Uygulamada oluşan tüm hataların tek bir merkezden yakalanıp yönetilmesini sağlar. Oluşan tüm hataların tek bir merkezden yakalanıp yönetilir
 
+Middleware, ASP.NET Core’da HTTP request–response pipeline’ına giren ve isteği işleyip bir sonrakine ileten bileşendir.
+
+UseExceptionHandler, ASP.NET Core’un hazır global exception handling middleware’idir.Uygulamada oluşan yakalanmamış hataları tek noktadan yönetir.
+
+### UseExceptionHandler ve ILogger nasıl kullanılır?
+**UseExceptionHandler**: Uygulamada oluşan yakalanmamış hataları global olarak yakalamak ve kullanıcıya güvenli cevap göndermek
+
+    var builder = WebApplication.CreateBuilder(args);
+    var app = builder.Build();
+ 
+    app.UseExceptionHandler("/Error");
+
+    app.MapControllers();
+    app.Run();
+
+**ILogger**: Uygulama içindeki olayları ve hataları loglamak için kullanılır.
+
+    public class UserController : ControllerBase
+    {
+     private readonly ILogger<UserController> _logger;
+
+    public UserController(ILogger<UserController> logger)
+    {
+        _logger = logger;
+    }
+
+    [HttpGet]
+    public IActionResult Get()
+    {
+        _logger.LogInformation("User listesi istendi");
+
+        try
+        {
+            throw new Exception("Test hata");
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Hata oluştu");
+            throw; // Global handler yakalar
+        }
+    }
+    }
+    //(throw; → hatayı UseExceptionHandler’a gönderir)
+
+## 8. Yazılım Geliştirme Prensipleri
+### SOLID prensipleri: Her biri için kısa açıklama ve örnek
+SOLID yazılım prensipleri; geliştirilen yazılımın esnek, yeniden kullanılabilir, sürdürülebilir ve anlaşılır olmasını sağlayan, kod tekrarını önler 
+
+- **S — Single-responsibility principle**
+Bir sınıf yalnızca bir amaç uğruna değiştirilebilir, o da o sınıfa yüklenen sorumluluktur, yani bir sınıfın yapması gereken yalnızca bir işi olması gerekir
+
+- **O — Open-closed principle**
+Bir sınıf ya da fonksiyon halihazırda var olan özellikleri korumalı ve değişikliğe izin vermemelidir. Yani davranışını değiştirmiyor olmalı ve yeni özellikler kazanabiliyor olmalıdır
+
+- **L — Liskov substitution principle**
+Kodlarımızda herhangi bir değişiklik yapmaya gerek duymadan alt sınıfları, türedikleri(üst) sınıfların yerine kullanabilmeliyiz
+
+- **I — Interface segregation principle**
+Sorumlulukların hepsini tek bir arayüze toplamak yerine daha özelleştirilmiş birden fazla arayüz oluşturmalıyı
+
+- **D — Dependency Inversion Principle**
+Sınıflar arası bağımlılıklar olabildiğince az olmalıdır özellikle üst seviye sınıflar alt seviye sınıflara bağımlı olmamalıdır
+
+### Design Patterns: Singleton, Repository, Factory
+- **Singleton** : Bir sınıftan uygulama boyunca yalnızca tek bir nesne oluşturulmasını sağlar. Bir sınıfın tek bir instance’ının olmasını ve her yerden erişilmesini sağlar.
+
+- **Repository** : Veri erişim katmanını soyutlayarak iş mantığını (business) veritabanından ayırmak. Veri erişim işlemlerini tek bir noktada toplayan tasarım desenidir.
+
+- **Factory** : Nesne oluşturma işlemini merkezi bir yapıdan yapmak. Hangi nesnenin oluşturulacağını istemciden gizleyen tasarım desenidir.
+
+### Clean Code nedir, neden önemlidir?
+Kodun temiz anlaşılabilir olması ve kod yazan geliştiricinin dışında ekipteki kodun kolay şekilde anlaşılabilmesi ve geliştirilebilmesidir.
+
+**Okunabilirlik**: Kod daha çabuk anlaşılır yeni gelen geliştirici projeyi çabuk anlar
+**Değiştirilebilirlik**: Kod kolayca değiştirilebiliyor yeni özellikler eklenebiliyor
+**Genişletilebilirlik**: Kod basitçe bozulmadan genişletirilebilir
+**Sürdürülebilirlik**: Kod bozulmadan bakımı yapılabiliyor
+
+### Yazılım Mimari Desenleri
+ 
+### Layered, Clean Architecture, Microservices, Event-Driven, Hexagonal Architecture (Ports & Adapters)
+
+- **Layered Architecture**: Uygulamanın sorumluluklerına göre katmanlar haline gelmesi
+- **Clean Architecture**: Framework ve dış bağımlılıklardan bağımsız hale getirmesi ve bağımlılıkları merkeze doğru yönlendirerek sürdürülebilir ve test edilebilir sistemler kurmayı amaçlar
+- **Microservices Architecture**: Uygulamayı bağımsız küçük servisler halinde bilünmesi
+- **Event-Driven Architecture**: Olaylar üzerinden asenkron iletişim kurar
+- **Hexagonal Architecture (Ports & Adapters)** : Uygulama çekirdeğini dış dünyadan tamamen koparır
+
+| Mimari                           | Temel Amaç            | Avantajlar                      | Dezavantajlar               | Uygun Senaryo                      |
+| -------------------------------- | --------------------- | ------------------------------- | --------------------------- | ---------------------------------- |
+| **Layered**                      | Katmanlı düzen        | Basit, anlaşılır                | Katmanlar arası bağımlılık  | Küçük–orta CRUD projeleri          |
+| **Clean Architecture**           | İş kurallarını koruma | Test edilebilir, sürdürülebilir | Kurulum karmaşık            | Uzun ömürlü projeler               |
+| **Microservices**                | Bağımsız servisler    | Ölçeklenebilir, bağımsız deploy | Dağıtık sistem karmaşıklığı | Büyük ve yüksek trafikli sistemler |
+| **Event-Driven**                 | Asenkron iletişim     | Gevşek bağlılık, performans     | Debug zor                   | Gerçek zamanlı sistemler           |
+| **Hexagonal (Ports & Adapters)** | Bağımlılık izolasyonu | Kolay test, esnek yapı          | Öğrenme eğrisi              | DB/UI değişken projeler            |
+| **Monolithic**                   | Tek uygulama          | Kolay geliştirme                | Ölçeklenemez                | Küçük projeler                     |
+| **MVC**                          | UI ayrımı             | Düzenli arayüz                  | UI odaklı                   | Web uygulamaları                   |
+
+### Hangi senaryoda hangi mimari tercih edilir?
+
+| Senaryo / İhtiyaç                 | Proje Özellikleri                   | Tercih Edilen Mimari             | Neden Bu Mimari?                    |
+| --------------------------------- | ----------------------------------- | -------------------------------- | ----------------------------------- |
+| **Küçük ve basit uygulama**       | Az kullanıcı, basit CRUD, kısa süre | **Monolithic / Layered**         | Hızlı geliştirme, düşük karmaşıklık |
+| **Web arayüzlü uygulama**         | UI odaklı, controller–view yapısı   | **MVC**                          | UI ve iş mantığı ayrımı             |
+| **Kurumsal ve uzun ömürlü proje** | İş kuralları yoğun, sık değişim     | **Clean Architecture**           | İş mantığı korunur, bakım kolay     |
+| **Test edilebilirlik öncelikli**  | Unit test, mock ihtiyacı            | **Hexagonal (Ports & Adapters)** | Dış bağımlılıklar izole edilir      |
+| **Yüksek trafik**                 | Binlerce kullanıcı, performans      | **Microservices**                | Bağımsız ölçekleme                  |
+| **Büyük ekipli projeler**         | Birden fazla ekip                   | **Microservices**                | Servis bazlı ekipler                |
+| **Asenkron işlemler**             | Bildirim, sipariş, log              | **Event-Driven**                 | Gevşek bağlı, hızlı iletişim        |
+| **Gerçek zamanlı sistem**         | Anlık veri akışı                    | **Event-Driven**                 | Olay tabanlı mimari                 |
+| **Değişken altyapı**              | DB / UI / API değişebilir           | **Hexagonal**                    | Adaptör değişir, core sabit         |
+| **Hızlı MVP / PoC**               | Deneme projesi                      | **Monolithic**                   | En hızlı başlangıç                  |
